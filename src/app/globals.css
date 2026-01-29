@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    /* Soft cool white */
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 252 87% 65%;
+    /* Soft Purple/Indigo */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 252 87% 96%;
+    /* Very light purple tint */
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 252 87% 65%;
+
+    --radius: 1rem;
+    /* More rounded */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-sm;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-sm hover:shadow-md transition-all duration-300;
+  }
+
+  /* Pastel Gradients */
+  .bg-gradient-soft {
+    @apply bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50;
+  }
+}

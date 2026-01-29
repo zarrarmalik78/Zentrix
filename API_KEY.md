@@ -1,0 +1,1 @@
+groq api key: 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
