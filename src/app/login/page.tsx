@@ -82,7 +82,7 @@ export default function LoginPage() {
                         <span>AI-Powered Study Planning</span>
                     </div>
                     <h1 className="text-5xl font-black tracking-tight text-white mb-6 leading-tight">
-                        Welcome Back to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">EduPlus</span>
+                        Welcome Back to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">Zentrix</span>
                     </h1>
                     <p className="text-lg text-indigo-200/80 leading-relaxed">
                         Continue your learning journey. Check your tasks, monitor your progress, and crush your academic goals.

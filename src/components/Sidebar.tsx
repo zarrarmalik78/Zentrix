@@ -77,7 +77,7 @@ export function Sidebar() {
                         />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-900 tracking-tight">EduPlus</h1>
+                        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Zentrix</h1>
                         <p className="text-xs text-muted-foreground font-medium">Study Planner AI</p>
                     </div>
                 </Link>

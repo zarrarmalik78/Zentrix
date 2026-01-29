@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-    title: "EduPlus - AI Study Planner",
+    title: "Zentrix - AI Study Planner",
     description: "Modern AI-powered study schedules for students",
 };
 
