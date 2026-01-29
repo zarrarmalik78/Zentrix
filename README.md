@@ -39,7 +39,7 @@ An AI-powered study planner that helps students create personalized study schedu
 
 1. **Clone the repository**
    ```bash
-   cd EduPlus
+   cd Zentrix
    ```
 
 2. **Install dependencies**
@@ -150,7 +150,7 @@ service cloud.firestore {
 ## Project Structure
 
 ```
-EduPlus/
+Zentrix/
 ├── src/
 │   ├── app/
 │   │   ├── admin/          # Admin dashboard

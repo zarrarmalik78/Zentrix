@@ -145,13 +145,13 @@ export default function LandingPage() {
                             transition={{ duration: 1, delay: 0.5 }}
                             className="mt-20 relative w-full max-w-6xl px-4"
                         >
-                            <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border-8 border-slate-900/5 bg-white">
+                            <div className="relative rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border-8 border-slate-900/5 bg-white flex items-center justify-center">
                                 <Image
                                     src="/saas_dashboard_mockup_1769728810125.png"
                                     alt="Zentrix Dashboard"
-                                    width={1920}
-                                    height={1080}
-                                    className="w-full h-auto drop-shadow-2xl"
+                                    width={1024}
+                                    height={1024}
+                                    className="w-full h-auto max-h-[70vh] object-contain"
                                     priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/5 to-transparent pointer-events-none" />
