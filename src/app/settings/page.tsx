@@ -308,7 +308,7 @@ export default function SettingsPage() {
                                 </div>
                             )}
 
-                            {(userProfile?.profile as any)?.weekdayHours && (
+                            {userProfile?.profile?.weekdayHours && (
                                 <div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
                                     <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                                         <Clock className="w-5 h-5 text-white" />
@@ -316,13 +316,13 @@ export default function SettingsPage() {
                                     <div>
                                         <p className="text-xs text-muted-foreground">Study Hours</p>
                                         <p className="font-semibold text-slate-900 dark:text-white">
-                                            {(userProfile.profile as any).weekdayHours}h weekdays, {(userProfile.profile as any).weekendHours}h weekends
+                                            {userProfile.profile.weekdayHours}h weekdays, {userProfile.profile.weekendHours}h weekends
                                         </p>
                                     </div>
                                 </div>
                             )}
 
-                            {(userProfile?.profile as any)?.goals && (
+                            {userProfile?.profile?.goals && (
                                 <div className="flex items-start gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
                                     <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
                                         <Target className="w-5 h-5 text-white" />
@@ -330,7 +330,7 @@ export default function SettingsPage() {
                                     <div>
                                         <p className="text-xs text-muted-foreground">Goals</p>
                                         <p className="text-sm text-slate-700 dark:text-slate-300">
-                                            {(userProfile.profile as any).goals}
+                                            {userProfile.profile.goals}
                                         </p>
                                     </div>
                                 </div>

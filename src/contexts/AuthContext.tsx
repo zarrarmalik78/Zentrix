@@ -18,12 +18,18 @@ type UserRole = "student" | "admin";
 interface UserProfile {
     uid: string;
     email: string;
+    displayName?: string;
     role: UserRole;
     profile?: {
         class?: string;
         subjects?: string[];
         syllabusCompleted?: number;
         examDate?: string;
+        weekdayHours?: number;
+        weekendHours?: number;
+        preferredTime?: string;
+        goals?: string;
+        weakTopics?: Record<string, string>;
     };
     gamification?: {
         xp: number;
