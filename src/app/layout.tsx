@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import AppShell from "@/components/AppShell";
+import { Toaster } from "sonner";
 
 const outfit = Outfit({
     subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
                 <AuthProvider>
                     <AppShell>{children}</AppShell>
                 </AuthProvider>
+                <Toaster position="top-right" richColors />
             </body>
         </html>
     );

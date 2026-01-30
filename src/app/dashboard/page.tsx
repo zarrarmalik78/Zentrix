@@ -19,6 +19,10 @@ import {
     Loader2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { useGamification } from "@/hooks/use-gamification";
+import { Celebration } from "@/components/gamification/celebration";
+import { Badge } from "@/types/gamification";
 
 import {
     Dialog,
@@ -36,6 +40,7 @@ import { Label } from "@/components/ui/label";
 import { CalendarStrip } from "@/components/CalendarStrip";
 import { TaskCard } from "@/components/TaskCard";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
+import { XPProgress } from "@/components/gamification/xp-progress";
 
 interface Task {
     id: string;
@@ -60,6 +65,10 @@ export default function Dashboard() {
     const [evidenceLink, setEvidenceLink] = useState("");
     const [actionLoading, setActionLoading] = useState(false);
 
+    // Gamification
+    const { awardTaskCompletion, isUpdating } = useGamification();
+    const [celebration, setCelebration] = useState<{ type: "levelUp" | "badge"; level?: number; badge?: Badge } | null>(null);
+
     useEffect(() => {
         if (!loading && !user) router.push("/login");
     }, [user, loading, router]);
@@ -82,6 +91,34 @@ export default function Dashboard() {
         setActionLoading(true);
         try {
             await updateDoc(doc(db, "tasks", taskId), { status, ...data });
+
+            // Award XP if task completed
+            if (status === "completed") {
+                const result = await awardTaskCompletion();
+                if (result) {
+                    // Show XP toast
+                    toast.success(`+${result.xpGained} XP earned! 🎉`);
+
+                    // Show level up celebration
+                    if (result.levelUp && result.newLevel) {
+                        setCelebration({ type: "levelUp", level: result.newLevel });
+                    }
+
+                    // Show badge unlock celebrations (one at a time)
+                    if (result.newBadges && result.newBadges.length > 0) {
+                        // Show first badge immediately or after level up
+                        setTimeout(() => {
+                            setCelebration({ type: "badge", badge: result.newBadges[0] });
+                        }, result.levelUp ? 4500 : 0);
+                    }
+
+                    // Show streak update
+                    if (result.streakUpdated && result.newStreak) {
+                        toast(`🔥 ${result.newStreak} day streak!`);
+                    }
+                }
+            }
+
             setIsSkipOpen(false);
             setIsEvidenceOpen(false);
         } finally {
@@ -112,6 +149,11 @@ export default function Dashboard() {
                         <span className="text-sm font-bold text-slate-700">{progressPercent}%</span>
                     </div>
                 </div>
+            </div>
+
+            {/* XP Progress */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-4">
+                <XPProgress />
             </div>
 
             {/* Calendar Strip */}
@@ -179,6 +221,16 @@ export default function Dashboard() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Celebration Modals */}
+            {celebration && (
+                <Celebration
+                    type={celebration.type}
+                    level={celebration.level}
+                    badge={celebration.badge}
+                    onComplete={() => setCelebration(null)}
+                />
+            )}
         </div>
     );
 }

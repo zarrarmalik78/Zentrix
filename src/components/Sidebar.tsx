@@ -61,6 +61,12 @@ export function Sidebar() {
                 href: "/analytics",
                 active: pathname === "/analytics",
             },
+            {
+                label: "Achievements",
+                icon: GraduationCap,
+                href: "/dashboard/achievements",
+                active: pathname === "/dashboard/achievements",
+            },
         ];
 
     return (

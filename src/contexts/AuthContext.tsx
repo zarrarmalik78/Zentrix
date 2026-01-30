@@ -25,6 +25,15 @@ interface UserProfile {
         syllabusCompleted?: number;
         examDate?: string;
     };
+    gamification?: {
+        xp: number;
+        level: number;
+        currentStreak: number;
+        longestStreak: number;
+        lastActivityDate: string;
+        totalTasksCompleted: number;
+        badges: string[];
+    };
 }
 
 interface AuthContextType {
@@ -75,6 +84,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             uid: userCredential.user.uid,
             email: userCredential.user.email!,
             role,
+            gamification: {
+                xp: 0,
+                level: 1,
+                currentStreak: 0,
+                longestStreak: 0,
+                lastActivityDate: new Date().toISOString(),
+                totalTasksCompleted: 0,
+                badges: [],
+            },
         };
 
         await setDoc(doc(db, "users", userCredential.user.uid), userProfile);
