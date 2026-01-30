@@ -67,6 +67,12 @@ export function Sidebar() {
                 href: "/dashboard/achievements",
                 active: pathname === "/dashboard/achievements",
             },
+            {
+                label: "Settings",
+                icon: Settings,
+                href: "/settings",
+                active: pathname === "/settings",
+            },
         ];
 
     return (

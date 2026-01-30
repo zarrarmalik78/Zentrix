@@ -41,6 +41,8 @@ import { CalendarStrip } from "@/components/CalendarStrip";
 import { TaskCard } from "@/components/TaskCard";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { XPProgress } from "@/components/gamification/xp-progress";
+import { DashboardEmptyState } from "@/components/DashboardEmptyState";
+import { TaskDetailModal } from "@/components/TaskDetailModal";
 
 interface Task {
     id: string;
@@ -61,6 +63,7 @@ export default function Dashboard() {
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [isSkipOpen, setIsSkipOpen] = useState(false);
     const [isEvidenceOpen, setIsEvidenceOpen] = useState(false);
+    const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
     const [skipReason, setSkipReason] = useState("");
     const [evidenceLink, setEvidenceLink] = useState("");
     const [actionLoading, setActionLoading] = useState(false);
@@ -160,40 +163,45 @@ export default function Dashboard() {
             <CalendarStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
             {/* Tasks Area */}
-            <div className="flex-1 overflow-y-auto pr-2 no-scrollbar pb-20">
-                <h3 className="text-lg font-bold text-slate-800 mb-4 sticky top-0 bg-slate-50 z-10 py-2">
-                    Tasks for {format(selectedDate, "MMMM do")}
-                </h3>
+            {tasks.length === 0 ? (
+                <DashboardEmptyState onGeneratePlan={() => router.push("/onboarding")} />
+            ) : (
+                <div className="flex-1 overflow-y-auto pr-2 no-scrollbar pb-20">
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 sticky top-0 bg-slate-50 dark:bg-slate-900 z-10 py-2">
+                        Tasks for {format(selectedDate, "MMMM do")}
+                    </h3>
 
-                <div className="space-y-4">
-                    <AnimatePresence mode="popLayout">
-                        {filteredTasks.length === 0 ? (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="flex flex-col items-center justify-center py-16 text-center"
-                            >
-                                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg shadow-indigo-50 mb-4">
-                                    <span className="text-4xl">🎉</span>
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-800">No tasks for today!</h3>
-                                <p className="text-slate-500 max-w-xs mt-2">
-                                    Enjoy your free time or select another date to plan ahead.
-                                </p>
-                            </motion.div>
-                        ) : (
-                            filteredTasks.map((task) => (
-                                <TaskCard
-                                    key={task.id}
-                                    task={task}
-                                    onComplete={() => handleStatusUpdate(task.id, "completed")}
-                                    onSkip={() => { setSelectedTask(task); setIsSkipOpen(true); }}
-                                />
-                            ))
-                        )}
-                    </AnimatePresence>
+                    <div className="space-y-4">
+                        <AnimatePresence mode="popLayout">
+                            {filteredTasks.length === 0 ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="flex flex-col items-center justify-center py-16 text-center"
+                                >
+                                    <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg shadow-indigo-50 mb-4">
+                                        <span className="text-4xl">🎉</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">No tasks for this date!</h3>
+                                    <p className="text-slate-500 max-w-xs mt-2">
+                                        Select another date from the calendar to view your tasks.
+                                    </p>
+                                </motion.div>
+                            ) : (
+                                filteredTasks.map((task) => (
+                                    <div key={task.id} onClick={() => { setSelectedTask(task); setIsTaskDetailOpen(true); }}>
+                                        <TaskCard
+                                            task={task}
+                                            onComplete={() => handleStatusUpdate(task.id, "completed")}
+                                            onSkip={() => { setSelectedTask(task); setIsSkipOpen(true); }}
+                                        />
+                                    </div>
+                                ))
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Floating Action Button */}
             <FloatingActionButton onClick={() => router.push("/onboarding")} />
@@ -221,6 +229,23 @@ export default function Dashboard() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Task Detail Modal */}
+            {selectedTask && (
+                <TaskDetailModal
+                    task={selectedTask}
+                    open={isTaskDetailOpen}
+                    onClose={() => setIsTaskDetailOpen(false)}
+                    onComplete={() => {
+                        handleStatusUpdate(selectedTask.id, "completed");
+                        setIsTaskDetailOpen(false);
+                    }}
+                    onSkip={() => {
+                        setIsTaskDetailOpen(false);
+                        setIsSkipOpen(true);
+                    }}
+                />
+            )}
 
             {/* Celebration Modals */}
             {celebration && (

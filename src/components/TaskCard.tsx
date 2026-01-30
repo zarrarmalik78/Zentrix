@@ -10,6 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getSubjectConfig } from "@/lib/subject-config";
 
 interface Task {
     id: string;
@@ -24,22 +25,10 @@ interface TaskCardProps {
     onSkip: () => void;
 }
 
-const subjectColors: Record<string, string> = {
-    Math: "bg-red-50 text-red-700 border-red-100",
-    Physics: "bg-blue-50 text-blue-700 border-blue-100",
-    Chemistry: "bg-purple-50 text-purple-700 border-purple-100",
-    Biology: "bg-green-50 text-green-700 border-green-100",
-    History: "bg-amber-50 text-amber-700 border-amber-100",
-    English: "bg-pink-50 text-pink-700 border-pink-100",
-    default: "bg-slate-50 text-slate-700 border-slate-100",
-};
-
 export function TaskCard({ task, onComplete, onSkip }: TaskCardProps) {
     const isCompleted = ["completed", "verified"].includes(task.status);
-
-    // Determine color based on subject (simple substring match or fallback)
-    const colorKey = Object.keys(subjectColors).find(key => task.subject.includes(key)) || "default";
-    const colorClass = subjectColors[colorKey];
+    const subjectConfig = getSubjectConfig(task.subject);
+    const SubjectIcon = subjectConfig.icon;
 
     return (
         <motion.div
@@ -49,18 +38,34 @@ export function TaskCard({ task, onComplete, onSkip }: TaskCardProps) {
             className={cn(
                 "relative p-5 rounded-3xl border transition-all duration-300 group",
                 isCompleted
-                    ? "bg-slate-50/50 grayscale opacity-60 border-slate-100"
-                    : "bg-white border-slate-100 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 hover:border-indigo-100"
+                    ? "bg-slate-50/50 grayscale opacity-60 border-slate-100 dark:bg-slate-900/50"
+                    : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 hover:border-indigo-100 dark:hover:border-indigo-900"
             )}
         >
             <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 space-y-3">
-                    <span className={cn("px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider", colorClass)}>
-                        {task.subject}
-                    </span>
+                    {/* Subject Badge with Icon */}
+                    <div className="flex items-center gap-2">
+                        <div className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center",
+                            subjectConfig.bgColor,
+                            isCompleted && "opacity-50"
+                        )}>
+                            <SubjectIcon className={cn("w-4 h-4", subjectConfig.color)} />
+                        </div>
+                        <span className={cn(
+                            "px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border",
+                            subjectConfig.bgColor,
+                            subjectConfig.color,
+                            subjectConfig.borderColor
+                        )}>
+                            {task.subject}
+                        </span>
+                    </div>
+
                     <h3 className={cn(
                         "text-lg font-bold leading-tight transition-colors",
-                        isCompleted ? "text-muted-foreground line-through decoration-2" : "text-slate-800"
+                        isCompleted ? "text-muted-foreground line-through decoration-2" : "text-slate-800 dark:text-slate-100"
                     )}>
                         {task.description}
                     </h3>
