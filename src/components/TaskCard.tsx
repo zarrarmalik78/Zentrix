@@ -10,7 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getSubjectConfig } from "@/lib/subject-config";
+import { getLearningConfig } from "@/lib/learning-config";
 
 interface Task {
     id: string;
@@ -27,8 +27,8 @@ interface TaskCardProps {
 
 export function TaskCard({ task, onComplete, onSkip }: TaskCardProps) {
     const isCompleted = ["completed", "verified"].includes(task.status);
-    const subjectConfig = getSubjectConfig(task.subject);
-    const SubjectIcon = subjectConfig.icon;
+    const learningConfig = getLearningConfig(task.subject);
+    const CategoryIcon = learningConfig.icon;
 
     return (
         <motion.div
@@ -44,20 +44,20 @@ export function TaskCard({ task, onComplete, onSkip }: TaskCardProps) {
         >
             <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 space-y-3">
-                    {/* Subject Badge with Icon */}
+                    {/* Category/Module Badge with Icon */}
                     <div className="flex items-center gap-2">
                         <div className={cn(
                             "w-8 h-8 rounded-lg flex items-center justify-center",
-                            subjectConfig.bgColor,
+                            learningConfig.bgColor,
                             isCompleted && "opacity-50"
                         )}>
-                            <SubjectIcon className={cn("w-4 h-4", subjectConfig.color)} />
+                            <CategoryIcon className={cn("w-4 h-4", learningConfig.color)} />
                         </div>
                         <span className={cn(
                             "px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border",
-                            subjectConfig.bgColor,
-                            subjectConfig.color,
-                            subjectConfig.borderColor
+                            learningConfig.bgColor,
+                            learningConfig.color,
+                            learningConfig.borderColor
                         )}>
                             {task.subject}
                         </span>

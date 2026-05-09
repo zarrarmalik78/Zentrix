@@ -105,8 +105,8 @@ export default function LandingPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.1 }}
                         >
-                            Your Syllabus, <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-blue-600">Simultaneously Solved.</span>
+                            Master Any Course. <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-blue-600">Personalized by AI.</span>
                         </motion.h1>
 
                         <motion.p
@@ -115,8 +115,8 @@ export default function LandingPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                         >
-                            Zentrix transforms complex curriculums into personalized daily missions.
-                            Stay ahead, stay organized, and ace your exams with zero stress.
+                            Zentrix transforms any course or skill into a personalized daily roadmap.
+                            Learn faster, stay organized, and master your goals with zero stress.
                         </motion.p>
 
                         <motion.div
@@ -192,7 +192,7 @@ export default function LandingPage() {
                 {/* Social Proof */}
                 <section className="py-24 bg-white border-y border-slate-100">
                     <div className="max-w-7xl mx-auto px-6">
-                        <p className="text-center font-bold text-slate-400 uppercase tracking-[0.2em] text-sm mb-12">Empowering 50,000+ Students globally</p>
+                        <p className="text-center font-bold text-slate-400 uppercase tracking-[0.2em] text-sm mb-12">Empowering 50,000+ Learners globally</p>
                         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-20 opacity-50 grayscale contrast-125">
                             {/* Dummy Logo Placeholders */}
                             <div className="text-2xl font-black text-slate-900 italic">STANFORD</div>
@@ -222,9 +222,9 @@ export default function LandingPage() {
                                     <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xl flex items-center justify-center mb-8 border border-white/30">
                                         <Calendar className="w-8 h-8 text-white" />
                                     </div>
-                                    <h3 className="text-3xl font-bold mb-4">Hyper-Personalized Scheduling</h3>
+                                    <h3 className="text-3xl font-bold mb-4">Hyper-Personalized Curriculum</h3>
                                     <p className="text-lg text-white/80 leading-relaxed">
-                                        Our AI doesn't just list tasks. It understands your pace, detects subjects you struggle with, and optimizes your time for maximum retention.
+                                        Our AI doesn't just list tasks. It understands your background, detects modules you need to focus on, and optimizes your journey for maximum mastery.
                                     </p>
                                 </div>
                                 <div className="absolute top-1/2 right-[-10%] translate-y-[-50%] w-[300px] h-[300px] bg-white opacity-10 rounded-full blur-[80px] group-hover:opacity-20 transition-opacity" />
@@ -255,9 +255,9 @@ export default function LandingPage() {
                                     <Brain className="w-8 h-8 text-indigo-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">Smart Subtopic Detection</h3>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">Atomic Module Breakdown</h3>
                                     <p className="text-slate-500 text-lg">
-                                        AI breaks down generic subjects into atomic chapters. You'll always know exactly what to study next.
+                                        AI breaks down generic courses into atomic, manageable modules. You'll always know exactly what to learn next.
                                     </p>
                                 </div>
                             </motion.div>
@@ -269,11 +269,11 @@ export default function LandingPage() {
                             >
                                 <div className="flex-1">
                                     <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-8 border border-white/20">
-                                        <Users className="w-8 h-8 text-white" />
+                                        <Zap className="w-8 h-8 text-white" />
                                     </div>
-                                    <h3 className="text-3xl font-bold mb-4">Admin & Tutor Central</h3>
+                                    <h3 className="text-3xl font-bold mb-4">Gamified Mastery Tracking</h3>
                                     <p className="text-lg text-white/70 leading-relaxed">
-                                        Perfect for organizations. Monitor student engagement, verify tasks, and view cohort analytics at a glance.
+                                        Turn your learning into a game. Earn XP, build streaks, and unlock achievements as you progress through your personalized curriculum.
                                     </p>
                                 </div>
                                 <div className="flex-1 w-full bg-slate-800 rounded-2xl p-6 border border-white/10 shadow-inner">
@@ -318,7 +318,7 @@ export default function LandingPage() {
                                         {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-current" />)}
                                     </div>
                                     <p className="text-xl text-slate-700 italic mb-8">
-                                        &quot;Before Zentrix, I was drowning in my syllabus. Now, every morning I have a clear mission. My grades have improved by 30% in just one month!&quot;
+                                        &quot;Before Zentrix, I was drowning in information while trying to learn Machine Learning. Now, every morning I have a clear roadmap. I've mastered concepts in weeks that usually take months!&quot;
                                     </p>
                                     <div className="flex items-center gap-4">
                                         <div className="w-14 h-14 rounded-full bg-slate-200 overflow-hidden relative">
@@ -326,7 +326,7 @@ export default function LandingPage() {
                                         </div>
                                         <div>
                                             <p className="font-bold text-slate-900 border-none">Sarah Millers</p>
-                                            <p className="text-slate-500 text-sm">Medical Student, UCL</p>
+                                            <p className="text-slate-500 text-sm">Self-Taught Developer</p>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -350,7 +350,7 @@ export default function LandingPage() {
 
                         <h2 className="text-4xl md:text-7xl font-black text-white mb-8">Ready to transform your <br /> learning journey?</h2>
                         <p className="text-xl text-white/60 mb-12 max-w-2xl mx-auto font-medium">
-                            Join thousands of students who are already using AI to master their syllabus and reduce study stress.
+                            Join thousands of learners who are already using AI to master any course and reduce study stress.
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-6">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { X, Clock, BookOpen, CheckCircle, ExternalLink } from "lucide-react";
+import { X, Clock, BookOpen, CheckCircle, ExternalLink, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -10,7 +10,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { getSubjectConfig } from "@/lib/subject-config";
+import { getLearningConfig } from "@/lib/learning-config";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 
@@ -44,35 +44,23 @@ const DIFFICULTY_COLORS = {
     Hard: "bg-red-100 text-red-700 border-red-200",
 };
 
-const STUDY_TIPS: Record<string, Record<string, string>> = {
-    Mathematics: {
-        Learn: "Start by understanding the concept before memorizing formulas. Draw diagrams to visualize problems.",
-        Practice: "Solve problems step-by-step. Don't skip steps even if they seem obvious. Check your work.",
-        Revise: "Review your formula sheet daily. Practice mental math for common calculations.",
-    },
-    Physics: {
-        Learn: "Visualize concepts with real-world examples. Use animations and simulations when possible.",
-        Practice: "Pay close attention to units. Draw free-body diagrams for mechanics problems.",
-        Revise: "Create a formula sheet with units. Practice dimensional analysis to check answers.",
-    },
-    Chemistry: {
-        Learn: "Understand the 'why' behind reactions. Draw molecular structures to visualize bonding.",
-        Practice: "Balance equations systematically. Use mnemonic devices for common reactions.",
-        Revise: "Review periodic trends regularly. Practice naming compounds and writing formulas.",
-    },
-    default: {
-        Learn: "Focus on understanding concepts deeply. Take notes in your own words.",
-        Practice: "Apply what you've learned through active practice. Test yourself regularly.",
-        Revise: "Review your notes within 24 hours. Use spaced repetition for long-term retention.",
-    },
+const STUDY_TIPS: Record<string, string> = {
+    Learn: "Focus on understanding the core principles first. Don't rush to move on until the basics feel intuitive.",
+    Practice: "Apply the concepts in different contexts. Repetition is key to building muscle memory and deep understanding.",
+    Revise: "Use spaced repetition and active recall. Summarize what you've learned in your own words to solidify memory.",
+    Research: "Explore multiple high-quality sources. Cross-reference information to build a well-rounded perspective.",
+    Project: "Break the project down into tiny, manageable steps. Focus on building a functional MVP before adding polish.",
+    Theory: "Try to explain the concept to someone else (or an imaginary student). If you can't explain it simply, you don't understand it well enough.",
+    Watch: "Be an active viewer. Pause, take notes, and try to predict what's coming next in the explanation.",
+    default: "Stay consistent and take regular breaks. Your brain needs time to process and store new information.",
 };
 
 export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: TaskDetailModalProps) {
-    const subjectConfig = getSubjectConfig(task.subject);
-    const SubjectIcon = subjectConfig.icon;
+    const learningConfig = getLearningConfig(task.subject);
+    const CategoryIcon = learningConfig.icon;
     const [completedSubtasks, setCompletedSubtasks] = useState<Set<number>>(new Set());
 
-    const studyTip = STUDY_TIPS[task.subject]?.[task.method || "Learn"] || STUDY_TIPS.default.Learn;
+    const studyTip = STUDY_TIPS[task.method || "Learn"] || STUDY_TIPS.default;
 
     const toggleSubtask = (index: number) => {
         const newCompleted = new Set(completedSubtasks);
@@ -89,32 +77,32 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl">
                 <DialogHeader>
                     <div className="flex items-start gap-4">
-                        {/* Subject Icon */}
+                        {/* Category Icon */}
                         <div className={cn(
-                            "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0",
-                            subjectConfig.bgColor
+                            "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm",
+                            learningConfig.bgColor
                         )}>
-                            <SubjectIcon className={cn("w-7 h-7", subjectConfig.color)} />
+                            <CategoryIcon className={cn("w-7 h-7", learningConfig.color)} />
                         </div>
 
                         <div className="flex-1">
-                            {/* Subject Badge */}
+                            {/* Category Badge */}
                             <span className={cn(
-                                "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border mb-2",
-                                subjectConfig.bgColor,
-                                subjectConfig.color,
-                                subjectConfig.borderColor
+                                "inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border mb-2",
+                                learningConfig.bgColor,
+                                learningConfig.color,
+                                learningConfig.borderColor
                             )}>
                                 {task.subject}
                             </span>
 
                             {/* Topic/Title */}
-                            <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                            <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white mt-1 leading-tight">
                                 {task.topic || task.description}
                             </DialogTitle>
 
                             {task.description && task.topic && (
-                                <p className="text-slate-600 dark:text-slate-400 mt-2">
+                                <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
                                     {task.description}
                                 </p>
                             )}
@@ -126,24 +114,24 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
                     {/* Meta Information */}
                     <div className="grid grid-cols-3 gap-4">
                         {task.duration && (
-                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-1">
-                                    <Clock className="w-4 h-4" />
-                                    <span className="text-xs font-medium uppercase tracking-wider">Time</span>
+                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 mb-1">
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Duration</span>
                                 </div>
                                 <p className="text-lg font-bold text-slate-900 dark:text-white">
-                                    {task.duration} min
+                                    {task.duration}m
                                 </p>
                             </div>
                         )}
 
                         {task.difficulty && (
-                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <div className="text-xs font-medium uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">
                                     Difficulty
                                 </div>
                                 <span className={cn(
-                                    "inline-block px-2 py-1 rounded-lg text-sm font-bold border",
+                                    "inline-block px-2 py-0.5 rounded-lg text-xs font-bold border",
                                     DIFFICULTY_COLORS[task.difficulty]
                                 )}>
                                     {task.difficulty}
@@ -152,10 +140,10 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
                         )}
 
                         {task.method && (
-                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 mb-1">
-                                    <BookOpen className="w-4 h-4" />
-                                    <span className="text-xs font-medium uppercase tracking-wider">Method</span>
+                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 mb-1">
+                                    <BookOpen className="w-3.5 h-3.5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-wider">Type</span>
                                 </div>
                                 <p className="text-lg font-bold text-slate-900 dark:text-white">
                                     {task.method}
@@ -166,59 +154,60 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
 
                     {/* Subtasks */}
                     {task.subtasks && task.subtasks.length > 0 && (
-                        <div className="space-y-3">
-                            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-primary" />
-                                What to Study
+                        <div className="space-y-4">
+                            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-lg">
+                                <CheckCircle className="w-5 h-5 text-indigo-500" />
+                                Module Checklist
                             </h3>
                             <div className="space-y-2">
                                 {task.subtasks.map((subtask, index) => (
                                     <motion.div
                                         key={index}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
                                         className={cn(
-                                            "flex items-start gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer",
+                                            "flex items-start gap-4 p-4 rounded-2xl border-2 transition-all cursor-pointer",
                                             completedSubtasks.has(index)
-                                                ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
-                                                : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-primary/50"
+                                                ? "bg-green-50/50 dark:bg-green-900/10 border-green-200 dark:border-green-900"
+                                                : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-900"
                                         )}
                                         onClick={() => toggleSubtask(index)}
                                     >
                                         <Checkbox
                                             checked={completedSubtasks.has(index)}
                                             onCheckedChange={() => toggleSubtask(index)}
-                                            className="mt-0.5"
+                                            className="mt-1 w-5 h-5 rounded-md"
                                         />
                                         <div className="flex-1">
                                             <p className={cn(
-                                                "font-medium",
+                                                "font-semibold transition-all",
                                                 completedSubtasks.has(index)
-                                                    ? "line-through text-muted-foreground"
+                                                    ? "line-through text-slate-400"
                                                     : "text-slate-900 dark:text-white"
                                             )}>
                                                 {subtask.description}
                                             </p>
-                                            <p className="text-xs text-muted-foreground mt-1">
-                                                ⏱️ {subtask.estimatedMinutes} minutes
-                                            </p>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-400">
+                                                <Clock className="w-3 h-3" />
+                                                <span className="text-[10px] font-medium">{subtask.estimatedMinutes} mins</span>
+                                            </div>
                                         </div>
                                     </motion.div>
                                 ))}
                             </div>
 
                             {/* Progress indicator */}
-                            <div className="mt-3">
-                                <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-muted-foreground">Progress</span>
-                                    <span className="font-bold text-primary">
-                                        {completedSubtasks.size} / {task.subtasks.length} completed
+                            <div className="mt-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <div className="flex justify-between text-xs mb-2">
+                                    <span className="text-slate-500 font-bold uppercase tracking-wider">Completion</span>
+                                    <span className="font-black text-indigo-600">
+                                        {Math.round((completedSubtasks.size / task.subtasks.length) * 100)}%
                                     </span>
                                 </div>
                                 <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-green-500 to-emerald-600"
+                                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
                                         initial={{ width: 0 }}
                                         animate={{ width: `${(completedSubtasks.size / task.subtasks.length) * 100}%` }}
                                         transition={{ duration: 0.5 }}
@@ -231,17 +220,17 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
                     {/* Resources */}
                     {task.resources && task.resources.length > 0 && (
                         <div className="space-y-3">
-                            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <BookOpen className="w-5 h-5 text-primary" />
-                                Recommended Resources
+                            <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-lg">
+                                <BookOpen className="w-5 h-5 text-indigo-500" />
+                                Learning Resources
                             </h3>
                             <div className="flex flex-wrap gap-2">
                                 {task.resources.map((resource, index) => (
                                     <div
                                         key={index}
-                                        className="px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-200 dark:border-blue-800 flex items-center gap-2"
+                                        className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold border border-indigo-100 dark:border-indigo-800 flex items-center gap-2 transition-colors hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
                                     >
-                                        <ExternalLink className="w-3 h-3" />
+                                        <ExternalLink className="w-3.5 h-3.5" />
                                         {resource}
                                     </div>
                                 ))}
@@ -250,30 +239,31 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
                     )}
 
                     {/* Study Tip */}
-                    <div className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800">
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-                            💡 Study Tip
+                    <div className="p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/30">
+                        <h3 className="font-bold text-amber-900 dark:text-amber-200 mb-2 flex items-center gap-2">
+                            <Lightbulb className="w-4 h-4 text-amber-500" />
+                            Expert Advice
                         </h3>
-                        <p className="text-sm text-slate-700 dark:text-slate-300">
+                        <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed font-medium">
                             {studyTip}
                         </p>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
                         <Button
                             variant="outline"
                             onClick={onSkip}
-                            className="flex-1 rounded-xl"
+                            className="flex-1 h-12 rounded-2xl font-bold border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all"
                         >
-                            Skip This
+                            Skip Task
                         </Button>
                         <Button
                             onClick={onComplete}
-                            className="flex-1 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:to-emerald-700"
+                            className="flex-1 h-12 rounded-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg hover:shadow-indigo-500/20 transition-all"
                         >
                             <CheckCircle className="w-4 h-4 mr-2" />
-                            Mark as Complete
+                            Complete Module
                         </Button>
                     </div>
                 </div>

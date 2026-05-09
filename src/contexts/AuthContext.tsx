@@ -13,23 +13,20 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
-type UserRole = "student" | "admin";
-
 interface UserProfile {
     uid: string;
     email: string;
     displayName?: string;
-    role: UserRole;
+    role: "student";
     profile?: {
-        class?: string;
-        subjects?: string[];
-        syllabusCompleted?: number;
-        examDate?: string;
+        courseName?: string;
+        level?: "beginner" | "intermediate" | "advanced";
+        background?: string;
+        targetDate?: string;
         weekdayHours?: number;
         weekendHours?: number;
         preferredTime?: string;
         goals?: string;
-        weakTopics?: Record<string, string>;
     };
     gamification?: {
         xp: number;
@@ -46,9 +43,9 @@ interface AuthContextType {
     user: User | null;
     userProfile: UserProfile | null;
     loading: boolean;
-    signUp: (email: string, password: string, role: UserRole) => Promise<void>;
+    signUp: (email: string, password: string) => Promise<void>;
     signIn: (email: string, password: string) => Promise<void>;
-    signInWithGoogle: (role: UserRole) => Promise<void>;
+    signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
     updateUserProfile: (profileData: UserProfile["profile"]) => Promise<void>;
 }
@@ -78,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return unsubscribe;
     }, []);
 
-    const signUp = async (email: string, password: string, role: UserRole) => {
+    const signUp = async (email: string, password: string) => {
         const userCredential = await createUserWithEmailAndPassword(
             auth,
             email,
@@ -89,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userProfile: UserProfile = {
             uid: userCredential.user.uid,
             email: userCredential.user.email!,
-            role,
+            role: "student",
             gamification: {
                 xp: 0,
                 level: 1,
@@ -109,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await signInWithEmailAndPassword(auth, email, password);
     };
 
-    const signInWithGoogle = async (role: UserRole) => {
+    const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
@@ -122,7 +119,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const newUserProfile: UserProfile = {
                 uid: user.uid,
                 email: user.email!,
-                role,
+                role: "student",
+                gamification: {
+                    xp: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastActivityDate: new Date().toISOString(),
+                    totalTasksCompleted: 0,
+                    badges: [],
+                },
             };
             await setDoc(doc(db, "users", user.uid), newUserProfile);
             setUserProfile(newUserProfile);

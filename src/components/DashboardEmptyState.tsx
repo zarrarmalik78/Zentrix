@@ -41,7 +41,7 @@ export function DashboardEmptyState({ onGeneratePlan }: EmptyStateProps) {
             </p>
 
             <p className="text-md text-muted-foreground max-w-md mb-8">
-                Let's create your personalized AI-powered study plan!
+                Let's create your personalized AI-powered learning journey!
             </p>
 
             {/* CTA Button */}
@@ -51,7 +51,7 @@ export function DashboardEmptyState({ onGeneratePlan }: EmptyStateProps) {
                 className="rounded-xl px-8 py-6 text-lg font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all group"
             >
                 <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Generate My Study Plan
+                Generate My Journey
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
 
@@ -61,7 +61,7 @@ export function DashboardEmptyState({ onGeneratePlan }: EmptyStateProps) {
                     <div className="text-3xl mb-2">🤖</div>
                     <h3 className="font-bold text-slate-900 dark:text-white mb-1">AI-Powered</h3>
                     <p className="text-sm text-muted-foreground">
-                        Personalized plans based on your exam date and subjects
+                        Personalized curriculum based on your course and level
                     </p>
                 </div>
 

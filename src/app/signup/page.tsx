@@ -7,15 +7,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircle, Loader2, GraduationCap, ShieldCheck, Check } from "lucide-react";
+import { motion } from "framer-motion";
+import { AlertCircle, Loader2, GraduationCap, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState<"student" | "admin">("student");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const { signUp, signInWithGoogle } = useAuth();
@@ -38,8 +37,8 @@ export default function SignupPage() {
         setLoading(true);
 
         try {
-            await signUp(email, password, role);
-            router.push(role === "student" ? "/onboarding" : "/admin");
+            await signUp(email, password);
+            router.push("/onboarding");
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err.message);
@@ -53,7 +52,7 @@ export default function SignupPage() {
 
     const handleGoogleSignIn = async () => {
         try {
-            await signInWithGoogle(role);
+            await signInWithGoogle();
             router.push("/dashboard");
         } catch (error) {
             console.error(error);
@@ -63,18 +62,9 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-screen flex bg-slate-50">
-            {/* Left Side - Dynamic Visuals */}
-            <div className={cn(
-                "hidden lg:flex w-1/2 relative items-center justify-center overflow-hidden transition-colors duration-700",
-                role === "student" ? "bg-blue-50" : "bg-indigo-50"
-            )}>
-                <motion.div
-                    initial={false}
-                    animate={{
-                        backgroundColor: role === "student" ? "rgba(59, 130, 246, 0.1)" : "rgba(79, 70, 229, 0.1)"
-                    }}
-                    className="absolute inset-0 transition-colors duration-700"
-                />
+            {/* Left Side - Visuals */}
+            <div className="hidden lg:flex w-1/2 relative items-center justify-center overflow-hidden bg-indigo-50">
+                <div className="absolute inset-0 bg-blue-500/5 transition-colors duration-700" />
 
                 {/* Animated Blobs */}
                 <motion.div
@@ -83,10 +73,7 @@ export default function SignupPage() {
                         rotate: [0, 90, 0],
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className={cn(
-                        "absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 mix-blend-multiply filter transition-colors duration-700",
-                        role === "student" ? "bg-purple-300" : "bg-indigo-300"
-                    )}
+                    className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 mix-blend-multiply filter bg-purple-300"
                 />
                 <motion.div
                     animate={{
@@ -94,37 +81,25 @@ export default function SignupPage() {
                         rotate: [0, -90, 0],
                     }}
                     transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className={cn(
-                        "absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 mix-blend-multiply filter transition-colors duration-700",
-                        role === "student" ? "bg-cyan-300" : "bg-purple-300"
-                    )}
+                    className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-30 mix-blend-multiply filter bg-cyan-300"
                 />
 
                 <div className="relative z-10 p-12 text-center max-w-lg">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={role}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <div className={cn(
-                                "mx-auto w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-black/5 text-white transition-colors duration-500",
-                                role === "student" ? "bg-gradient-to-br from-cyan-400 to-blue-500" : "bg-gradient-to-br from-indigo-500 to-purple-600"
-                            )}>
-                                {role === "student" ? <GraduationCap className="w-10 h-10" /> : <ShieldCheck className="w-10 h-10" />}
-                            </div>
-                            <h1 className="text-4xl font-black tracking-tight mb-4 text-slate-900">
-                                {role === 'student' ? "Ace Your Exams." : "Manage & Monitor."}
-                            </h1>
-                            <p className="text-lg text-slate-500">
-                                {role === 'student'
-                                    ? "Join thousands of students organizing their academic life with AI."
-                                    : "Powerful tools for educators and administrators to track progress."}
-                            </p>
-                        </motion.div>
-                    </AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="mx-auto w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-black/5 text-white bg-gradient-to-br from-cyan-400 to-blue-500">
+                            <GraduationCap className="w-10 h-10" />
+                        </div>
+                        <h1 className="text-4xl font-black tracking-tight mb-4 text-slate-900">
+                            Master Any Course.
+                        </h1>
+                        <p className="text-lg text-slate-500">
+                            Join thousands of learners organizing their education with AI-powered personalized study plans.
+                        </p>
+                    </motion.div>
                 </div>
             </div>
 
@@ -133,33 +108,7 @@ export default function SignupPage() {
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center">
                         <h2 className="text-3xl font-bold tracking-tight text-slate-900">Create Account</h2>
-                        <p className="text-slate-500 mt-2">Choose your role to get started</p>
-                    </div>
-
-                    {/* Role Selector Card */}
-                    <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100/50 rounded-2xl border border-slate-200">
-                        <button
-                            onClick={() => setRole("student")}
-                            className={cn(
-                                "relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-300",
-                                role === "student" ? "bg-white shadow-sm ring-2 ring-blue-100" : "hover:bg-slate-200/50 text-slate-500"
-                            )}
-                        >
-                            <GraduationCap className={cn("w-6 h-6 mb-2", role === "student" ? "text-blue-500" : "text-slate-400")} />
-                            <span className="font-bold text-sm">Student</span>
-                            {role === "student" && <motion.div layoutId="roleCheck" className="absolute top-2 right-2 text-blue-500"><Check className="w-4 h-4" /></motion.div>}
-                        </button>
-                        <button
-                            onClick={() => setRole("admin")}
-                            className={cn(
-                                "relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-300",
-                                role === "admin" ? "bg-white shadow-sm ring-2 ring-indigo-100" : "hover:bg-slate-200/50 text-slate-500"
-                            )}
-                        >
-                            <ShieldCheck className={cn("w-6 h-6 mb-2", role === "admin" ? "text-indigo-500" : "text-slate-400")} />
-                            <span className="font-bold text-sm">Admin</span>
-                            {role === "admin" && <motion.div layoutId="roleCheck" className="absolute top-2 right-2 text-indigo-500"><Check className="w-4 h-4" /></motion.div>}
-                        </button>
+                        <p className="text-slate-500 mt-2">Start your learning journey today</p>
                     </div>
 
                     <div className="space-y-4">
@@ -177,7 +126,7 @@ export default function SignupPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="name@school.edu"
+                                    placeholder="name@example.com"
                                     className="h-12 rounded-xl bg-slate-50 border-transparent focus:bg-white transition-all"
                                     required
                                 />
@@ -208,12 +157,7 @@ export default function SignupPage() {
                             <Button
                                 type="submit"
                                 disabled={loading}
-                                className={cn(
-                                    "w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]",
-                                    role === "student"
-                                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 hover:to-blue-700"
-                                        : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:to-purple-700 shadow-indigo-500/20"
-                                )}
+                                className="w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] bg-gradient-to-r from-cyan-500 to-blue-600 hover:to-blue-700"
                             >
                                 {loading ? <Loader2 className="animate-spin" /> : "Create Account"}
                             </Button>

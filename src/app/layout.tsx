@@ -11,8 +11,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-    title: "Zentrix - AI Study Planner",
-    description: "Modern AI-powered study schedules for students",
+    title: "Zentrix - AI Learning Platform",
+    description: "Master any skill with personalized AI-powered learning journeys",
 };
 
 export default function RootLayout({

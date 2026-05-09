@@ -112,7 +112,7 @@ export default function AnalyticsPage() {
         <div className="p-8 max-w-7xl mx-auto space-y-8">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-                <p className="text-muted-foreground">Track your study progress and habits.</p>
+                <p className="text-muted-foreground">Track your learning journey and progress.</p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -120,7 +120,7 @@ export default function AnalyticsPage() {
                 {/* Completion Rate Pie Chart */}
                 <Card className="col-span-3">
                     <CardHeader>
-                        <CardTitle>Task Completion</CardTitle>
+                        <CardTitle>Completion Rate</CardTitle>
                         <CardDescription>Overview of task statuses</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
@@ -158,7 +158,7 @@ export default function AnalyticsPage() {
                 <Card className="col-span-4">
                     <CardHeader>
                         <CardTitle>Weekly Activity</CardTitle>
-                        <CardDescription>Tasks completed in the last 7 days</CardDescription>
+                        <CardDescription>Modules completed in the last 7 days</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
@@ -173,11 +173,11 @@ export default function AnalyticsPage() {
                     </CardContent>
                 </Card>
 
-                {/* Subject Distribution Bar Chart */}
+                {/* Category Distribution Bar Chart */}
                 <Card className="col-span-7">
                     <CardHeader>
-                        <CardTitle>Subject Distribution</CardTitle>
-                        <CardDescription>Total tasks assigned per subject</CardDescription>
+                        <CardTitle>Category Distribution</CardTitle>
+                        <CardDescription>Total tasks per category</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">

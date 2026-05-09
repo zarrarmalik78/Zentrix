@@ -9,11 +9,11 @@ interface GeneratingPlanLoaderProps {
 
 export function GeneratingPlanLoader({ message = "Creating your personalized plan..." }: GeneratingPlanLoaderProps) {
     const steps = [
-        "Analyzing exam timeline",
-        "Breaking down subjects",
-        "Scheduling daily tasks",
-        "Optimizing study hours",
-        "Finalizing your plan",
+        "Analyzing learning goals",
+        "Structuring curriculum phases",
+        "Mapping educational resources",
+        "Optimizing your schedule",
+        "Finalizing your journey",
     ];
 
     return (

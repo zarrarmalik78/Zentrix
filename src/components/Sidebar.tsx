@@ -10,7 +10,6 @@ import {
     Settings,
     LogOut,
     GraduationCap,
-    Users,
     BookOpen
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,61 +18,39 @@ import { motion } from "framer-motion";
 export function Sidebar() {
     const pathname = usePathname();
     const { userProfile, signOut } = useAuth();
-    const isAdmin = userProfile?.role === "admin";
 
-    const routes = isAdmin
-        ? [
-            {
-                label: "Dashboard",
-                icon: LayoutDashboard,
-                href: "/admin",
-                active: pathname === "/admin",
-            },
-            {
-                label: "Students",
-                icon: Users,
-                href: "/admin/students",
-                active: pathname.startsWith("/admin/students"),
-            },
-            {
-                label: "Analytics",
-                icon: BarChart3,
-                href: "/admin/analytics",
-                active: pathname === "/admin/analytics",
-            },
-        ]
-        : [
-            {
-                label: "Home",
-                icon: LayoutDashboard,
-                href: "/dashboard",
-                active: pathname === "/dashboard",
-            },
-            {
-                label: "Schedule",
-                icon: CalendarDays,
-                href: "/calendar",
-                active: pathname === "/calendar",
-            },
-            {
-                label: "Progress",
-                icon: BarChart3,
-                href: "/analytics",
-                active: pathname === "/analytics",
-            },
-            {
-                label: "Achievements",
-                icon: GraduationCap,
-                href: "/dashboard/achievements",
-                active: pathname === "/dashboard/achievements",
-            },
-            {
-                label: "Settings",
-                icon: Settings,
-                href: "/settings",
-                active: pathname === "/settings",
-            },
-        ];
+    const routes = [
+        {
+            label: "Home",
+            icon: LayoutDashboard,
+            href: "/dashboard",
+            active: pathname === "/dashboard",
+        },
+        {
+            label: "Schedule",
+            icon: CalendarDays,
+            href: "/calendar",
+            active: pathname === "/calendar",
+        },
+        {
+            label: "Progress",
+            icon: BarChart3,
+            href: "/analytics",
+            active: pathname === "/analytics",
+        },
+        {
+            label: "Achievements",
+            icon: GraduationCap,
+            href: "/dashboard/achievements",
+            active: pathname === "/dashboard/achievements",
+        },
+        {
+            label: "Settings",
+            icon: Settings,
+            href: "/settings",
+            active: pathname === "/settings",
+        },
+    ];
 
     return (
         <div className="h-full py-6 flex flex-col bg-slate-50 border-r border-slate-100">
@@ -155,7 +132,6 @@ export function Sidebar() {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-slate-800 truncate">{userProfile?.email.split('@')[0]}</p>
-                                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{userProfile?.role}</p>
                             </div>
                         </div>
                         <button

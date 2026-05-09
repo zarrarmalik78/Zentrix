@@ -141,7 +141,7 @@ export default function Dashboard() {
                         Hello, {userProfile.email.split("@")[0]} 👋
                     </h2>
                     <p className="text-slate-500 font-medium mt-1">
-                        You've completed <span className="text-primary font-bold">{completedCount} tasks</span> this semester.
+                        You've completed <span className="text-primary font-bold">{completedCount} modules</span> in your journey.
                     </p>
                 </div>
                 <div className="hidden md:block">

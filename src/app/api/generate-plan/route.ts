@@ -23,16 +23,14 @@ if (!getApps().length) {
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 interface GeneratePlanRequest {
-    class: string;
-    subjects: string[];
-    customSubjects?: string;
-    examDate: string;
-    syllabusProgress?: Record<string, number>;
-    weekdayHours?: number;
-    weekendHours?: number;
-    preferredTime?: string;
-    goals?: string;
-    weakTopics?: Record<string, string>;
+    courseName: string;
+    level: "beginner" | "intermediate" | "advanced";
+    background: string;
+    targetDate: string;
+    weekdayHours: number;
+    weekendHours: number;
+    preferredTime: string;
+    goals: string;
 }
 
 interface TaskSubtask {
@@ -41,14 +39,14 @@ interface TaskSubtask {
 }
 
 interface Task {
-    subject: string;
+    subject: string; // Used as Category/Module in new model
     topic: string;
     description: string;
     subtasks: TaskSubtask[];
     date: string;
     duration: number;
     difficulty: "Easy" | "Medium" | "Hard";
-    method: string;
+    method: "Learn" | "Practice" | "Revise" | "Research" | "Project" | "Theory" | "Watch";
     resources: string[];
 }
 
@@ -85,125 +83,99 @@ export async function POST(req: NextRequest) {
 
         const body: GeneratePlanRequest = await req.json();
         const {
-            class: classLevel,
-            subjects,
-            customSubjects,
-            examDate,
-            syllabusProgress = {},
-            weekdayHours = 3,
-            weekendHours = 5,
+            courseName,
+            level,
+            background,
+            targetDate,
+            weekdayHours = 2,
+            weekendHours = 4,
             preferredTime = "evening",
             goals = "",
-            weakTopics = {},
         } = body;
 
-        // Calculate days until exam
+        // Calculate days until target
         const today = new Date();
-        const exam = new Date(examDate);
-        const daysUntilExam = Math.ceil((exam.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const target = new Date(targetDate);
+        const daysRemaining = Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-        if (daysUntilExam <= 0) {
+        if (daysRemaining <= 0) {
             return NextResponse.json(
-                { error: "Exam date must be in the future" },
+                { error: "Target date must be in the future" },
                 { status: 400 }
             );
         }
 
-        // Combine subjects
-        const allSubjects = [...subjects];
-        if (customSubjects) {
-            const custom = customSubjects.split(",").map((s) => s.trim()).filter(Boolean);
-            allSubjects.push(...custom);
-        }
+        const prompt = `You are Zentrix AI, an expert educational architect and learning scientist. 
+Your goal is to design a high-performance, personalized learning curriculum for a student.
 
-        // Build detailed prompt for quality AI responses
-        const subjectDetails = allSubjects
-            .map((subject) => {
-                const progress = syllabusProgress[subject] || 0;
-                const weak = weakTopics[subject] || "None specified";
-                return `- ${subject}: ${progress}% completed, Weak Topics: ${weak}`;
-            })
-            .join("\n");
-
-        const prompt = `You are an expert study planner creating a personalized schedule for a student.
-
-STUDENT PROFILE:
-- Class/Level: ${classLevel}
-- Exam Date: ${examDate} (${daysUntilExam} days remaining)
-- Daily Study Time: ${weekdayHours} hours (weekdays), ${weekendHours} hours (weekends)
+USER PROFILE:
+- Course/Skill to Master: ${courseName}
+- Current Level: ${level}
+- Background/Experience: ${background}
+- Target Completion Date: ${targetDate} (${daysRemaining} days remaining)
+- Daily Availability: ${weekdayHours}h (weekdays), ${weekendHours}h (weekends)
 - Preferred Study Time: ${preferredTime}
-${goals ? `- Goals: ${goals}` : ""}
+- Primary Objectives: ${goals}
 
-SUBJECTS & PROGRESS:
-${subjectDetails}
+YOUR TASK:
+Create a comprehensive, day-by-day learning journey that transforms this user from ${level} to mastery in ${courseName}.
 
-REQUIREMENTS:
-1. Create a day-by-day study schedule from today (${today.toISOString().split("T")[0]}) until the exam date
-2. For EACH task, provide:
-   - **subject**: The subject name
-   - **topic**: Specific, clear topic name (NOT vague like "Study Math")
-   - **description**: Brief overview of what to study
-   - **subtasks**: Array of 3-5 actionable steps with estimated minutes
-     Example subtask: { "description": "Watch Khan Academy video on Chain Rule", "estimatedMinutes": 15 }
+CURRICULUM REQUIREMENTS:
+1. Divide the timeline (${daysRemaining} days) into progressive phases:
+   - Phase 1: Foundations & Core Concepts
+   - Phase 2: Deep Dive & Application
+   - Phase 3: Advanced Topics & Projects
+   - Phase 4: Mastery, Review & Final Goal Achievement
+
+2. Generate SPECIFIC, ACTIONABLE tasks for each day from today (${today.toISOString().split("T")[0]}) until the target date.
+
+3. For EACH task, provide:
+   - **subject**: The Category of the task. Choose EXACTLY ONE from: ["Learn", "Practice", "Revise", "Research", "Project", "Theory", "Watch"]
+   - **topic**: A clear, professional title for the module (e.g., "Intro to Neural Networks", "Advanced Italian Verb Conjugation")
+   - **description**: A compelling overview of what will be achieved today
+   - **subtasks**: Array of 3-5 specific micro-steps with estimated minutes
    - **date**: Date in YYYY-MM-DD format
-   - **duration**: Total estimated time in minutes (sum of subtasks)
+   - **duration**: Total minutes (sum of subtasks). Must not exceed user's daily availability.
    - **difficulty**: "Easy", "Medium", or "Hard"
-   - **method**: "Learn", "Practice", or "Revise"
-   - **resources**: Array of resource names (e.g., "NCERT Textbook", "Khan Academy", "Practice Workbook")
+   - **method**: Detailed learning strategy (e.g., "Active Recall", "Feynman Technique", "Project-Based Learning")
+   - **resources**: Array of high-quality resource suggestions (e.g., specific YouTube channels, documentation, books, or online platforms)
 
-3. Follow these principles:
-   - Focus on weak topics first for each subject
-   - Start with easier topics to build confidence
-   - Increase difficulty gradually
-   - Include regular revision cycles (every 7-10 days)
-   - Distribute subjects evenly throughout the schedule
-   - Add intensive revision in the last 2 weeks before exam
-   - Limit tasks to ${weekdayHours} hours on weekdays, ${weekendHours} hours on weekends
-
-4. Make tasks SPECIFIC and ACTIONABLE:
-   ❌ Bad: "Study Mathematics"
-   ✅ Good Topic: "Derivatives - Chain Rule and Product Rule"
-   ✅ Good Subtasks:
-      - Watch concept video (15 min)
-      - Read textbook Chapter 5, Section 3 (20 min)
-      - Solve 10 practice problems (25 min)
-      - Create formula flashcard (5 min)
-
-5. Task distribution:
-   - First ${Math.floor(daysUntilExam * 0.7)} days: Cover remaining syllabus
-   - Next ${Math.floor(daysUntilExam * 0.2)} days: Comprehensive revision
-   - Last ${Math.floor(daysUntilExam * 0.1)} days: Mock tests and problem-solving
+4. DESIGN PRINCIPLES:
+   - **Spaced Repetition**: Schedule review tasks every 5-7 days.
+   - **Scaffolding**: Ensure concepts build on each other logically.
+   - **Variety**: Mix watching, reading, and doing to keep engagement high.
+   - **Gamification Ready**: Create tasks that feel like "missions" or "levels".
+   - **Realistic**: Respect the user's background. If they are a beginner, don't start with complex theory.
 
 OUTPUT FORMAT (JSON only, NO markdown):
 {
   "tasks": [
     {
-      "subject": "Mathematics",
-      "topic": "Derivatives - Chain Rule",
-      "description": "Learn and practice derivative rules with special focus on chain rule applications",
+      "subject": "Learn",
+      "topic": "Fundamentals of [Course Name]",
+      "description": "Establish a strong foundation by understanding the core principles...",
       "subtasks": [
-        { "description": "Watch Khan Academy video on Chain Rule", "estimatedMinutes": 15 },
-        { "description": "Read NCERT Chapter 5, Pages 78-85", "estimatedMinutes": 20 },
-        { "description": "Solve 10 problems from Exercise 5.3", "estimatedMinutes": 25 }
+        { "description": "Micro-step 1", "estimatedMinutes": 20 },
+        { "description": "Micro-step 2", "estimatedMinutes": 30 }
       ],
-      "date": "2026-01-30",
-      "duration": 60,
-      "difficulty": "Medium",
+      "date": "YYYY-MM-DD",
+      "duration": 50,
+      "difficulty": "Easy",
       "method": "Learn",
-      "resources": ["NCERT Class 12 Math", "Khan Academy Calculus"]
+      "resources": ["Resource 1", "Resource 2"]
     }
   ]
 }
 
-Generate comprehensive tasks covering all subjects and the entire timeline. Ensure variety and proper pacing.`;
+Make the curriculum dense, professional, and world-class. Focus on the user's specific goals: ${goals}`;
 
-        console.log("Generating plan with Groq AI...");
+        console.log("Generating world-class curriculum with Groq AI...");
 
         const completion = await groq.chat.completions.create({
             messages: [{ role: "user", content: prompt }],
             model: "llama-3.3-70b-versatile",
-            temperature: 0.7,
-            max_tokens: 8000, // Allow longer responses for detailed tasks
+            temperature: 0.75,
+            max_tokens: 8000,
             response_format: { type: "json_object" },
         });
 
@@ -222,7 +194,6 @@ Generate comprehensive tasks covering all subjects and the entire timeline. Ensu
             console.log(`Generated ${aiTasks.length} tasks`);
         } catch (error) {
             console.error("JSON parsing error:", error);
-            console.error("Raw response:", responseText.substring(0, 500));
             return NextResponse.json(
                 { error: "Failed to parse AI response. Please try again." },
                 { status: 500 }
@@ -237,8 +208,8 @@ Generate comprehensive tasks covering all subjects and the entire timeline. Ensu
             const taskRef = db.collection("tasks").doc();
             batch.set(taskRef, {
                 userId,
-                subject: task.subject,
-                topic: task.topic || task.description,
+                subject: task.subject, // Category (Learn/Practice/etc)
+                topic: task.topic,
                 description: task.description,
                 subtasks: task.subtasks || [],
                 date: new Date(task.date),
@@ -254,12 +225,12 @@ Generate comprehensive tasks covering all subjects and the entire timeline. Ensu
 
         await batch.commit();
 
-        console.log(`Successfully saved ${aiTasks.length} tasks to Firestore`);
+        console.log(`Successfully saved ${aiTasks.length} curriculum modules to Firestore`);
 
         return NextResponse.json({
             success: true,
             tasksCreated: aiTasks.length,
-            message: `Created ${aiTasks.length} personalized tasks for your ${daysUntilExam}-day study plan`,
+            message: `Created ${aiTasks.length} curriculum modules for your journey to master ${courseName}`,
         });
     } catch (error: unknown) {
         console.error("Error generating plan:", error);

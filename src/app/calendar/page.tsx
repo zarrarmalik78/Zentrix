@@ -65,8 +65,8 @@ export default function CalendarPage() {
     return (
         <div className="p-8 max-w-6xl mx-auto h-[calc(100vh-2rem)] flex flex-col">
             <div className="mb-6">
-                <h1 className="text-3xl font-bold tracking-tight">Study Calendar</h1>
-                <p className="text-muted-foreground">Visual view of your study schedule.</p>
+                <h1 className="text-3xl font-bold tracking-tight">Learning Calendar</h1>
+                <p className="text-muted-foreground">Visual view of your learning journey.</p>
             </div>
 
             <div className="grid md:grid-cols-[1fr_350px] gap-8 flex-1 overflow-hidden">
