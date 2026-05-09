@@ -25,10 +25,9 @@ if (!getApps().length) {
     }
 }
 
-const db = getFirestore();
-
 export async function POST(request: NextRequest) {
     try {
+        const db = getFirestore();
         // Verify authentication
         const authHeader = request.headers.get("Authorization");
         if (!authHeader?.startsWith("Bearer ")) {

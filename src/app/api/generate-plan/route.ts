@@ -19,8 +19,7 @@ if (!getApps().length) {
     }
 }
 
-// Initialize Groq
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 
 interface GeneratePlanRequest {
     courseName: string;
@@ -52,6 +51,9 @@ interface Task {
 
 export async function POST(req: NextRequest) {
     try {
+        // Initialize Groq
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
         // Check if Groq API key is configured
         if (!process.env.GROQ_API_KEY) {
             return NextResponse.json(
