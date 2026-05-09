@@ -261,48 +261,48 @@ export default function SettingsPage() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <BookOpen className="w-5 h-5 text-primary" />
-                                Study Profile
+                                Learning Profile
                             </CardTitle>
-                            <CardDescription>Your current study plan configuration</CardDescription>
+                            <CardDescription>Your current curriculum configuration</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {userProfile.profile.class && (
+                            {userProfile.profile.courseName && (
                                 <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                                     <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                                         <BookOpen className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-muted-foreground">Class</p>
+                                        <p className="text-xs text-muted-foreground">Course</p>
                                         <p className="font-semibold text-slate-900 dark:text-white">
-                                            {userProfile.profile.class}
+                                            {userProfile.profile.courseName}
                                         </p>
                                     </div>
                                 </div>
                             )}
 
-                            {userProfile.profile.subjects && (
+                            {userProfile.profile.level && (
                                 <div className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
                                     <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                                        <BookOpen className="w-5 h-5 text-white" />
+                                        <Target className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-muted-foreground">Subjects</p>
-                                        <p className="font-semibold text-slate-900 dark:text-white">
-                                            {userProfile.profile.subjects.join(", ")}
+                                        <p className="text-xs text-muted-foreground">Level</p>
+                                        <p className="font-semibold text-slate-900 dark:text-white capitalize">
+                                            {userProfile.profile.level}
                                         </p>
                                     </div>
                                 </div>
                             )}
 
-                            {userProfile.profile.examDate && (
+                            {userProfile.profile.targetDate && (
                                 <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
                                     <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                                         <Calendar className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-muted-foreground">Exam Date</p>
+                                        <p className="text-xs text-muted-foreground">Target Date</p>
                                         <p className="font-semibold text-slate-900 dark:text-white">
-                                            {format(new Date(userProfile.profile.examDate), "MMMM dd, yyyy")}
+                                            {format(new Date(userProfile.profile.targetDate), "MMMM dd, yyyy")}
                                         </p>
                                     </div>
                                 </div>
@@ -342,7 +342,7 @@ export default function SettingsPage() {
                                 className="w-full rounded-xl mt-4"
                             >
                                 <RefreshCw className="w-4 h-4 mr-2" />
-                                Update Study Plan
+                                Update Learning Plan
                             </Button>
                         </CardContent>
                     </Card>
