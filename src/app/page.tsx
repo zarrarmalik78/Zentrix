@@ -51,7 +51,7 @@ export default function LandingPage() {
                     <span className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">Zentrix</span>
                 </div>
                 <nav className="ml-auto flex items-center gap-8">
-                    <Link className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors hidden md:block" href="/login">
+                    <Link className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors hidden md:block" href="/features">
                         Features
                     </Link>
                     <Link className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors hidden md:block" href="/login">
