@@ -8,6 +8,7 @@ import { ArrowRight, BookOpen, Calendar, CheckCircle2, Star, Users, Zap, Shield,
 import { useAuth } from "@/contexts/AuthContext";
 import { redirect } from "next/navigation";
 import { useRef } from "react";
+import { ShowcaseSection } from "@/components/landing/ShowcaseSection";
 
 export default function LandingPage() {
     const { user, loading } = useAuth();
@@ -188,6 +189,9 @@ export default function LandingPage() {
                         </motion.div>
                     </div>
                 </section>
+
+                {/* Showcase Section (Analytics, Badges, etc) */}
+                <ShowcaseSection />
 
                 {/* Social Proof */}
                 <section className="py-24 bg-white border-y border-slate-100">

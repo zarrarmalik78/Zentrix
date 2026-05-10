@@ -24,6 +24,19 @@ export function getProgressToNextLevel(currentXp: number): number {
     return Math.round(progress * 100);
 }
 
+export function getLevelProgress(xp: number) {
+    const level = calculateLevel(xp);
+    const currentLevelXp = getXpForLevel(level);
+    const nextLevelXp = getXpForLevel(level + 1);
+    const progress = getProgressToNextLevel(xp);
+    
+    return {
+        currentXp: xp - currentLevelXp,
+        nextLevelXp: nextLevelXp - currentLevelXp,
+        progress
+    };
+}
+
 // Check if user's streak should continue, break, or stay the same
 export function checkStreak(lastActivityDate: string | null): {
     shouldIncrement: boolean;

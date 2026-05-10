@@ -225,15 +225,27 @@ export function TaskDetailModal({ task, open, onClose, onComplete, onSkip }: Tas
                                 Learning Resources
                             </h3>
                             <div className="flex flex-wrap gap-2">
-                                {task.resources.map((resource, index) => (
-                                    <div
-                                        key={index}
-                                        className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold border border-indigo-100 dark:border-indigo-800 flex items-center gap-2 transition-colors hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
-                                    >
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                        {resource}
-                                    </div>
-                                ))}
+                                {task.resources.map((resource, index) => {
+                                    const isUrl = resource.startsWith('http') || resource.startsWith('www');
+                                    const href = isUrl 
+                                        ? (resource.startsWith('http') ? resource : `https://${resource}`)
+                                        : `https://www.google.com/search?q=${encodeURIComponent(resource)}`;
+
+                                    return (
+                                        <motion.a
+                                            key={index}
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            whileHover={{ scale: 1.05, y: -2 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-bold border border-indigo-100 dark:border-indigo-800 flex items-center gap-2 transition-colors hover:bg-indigo-100 dark:hover:bg-indigo-900/40 cursor-pointer no-underline"
+                                        >
+                                            <ExternalLink className="w-3.5 h-3.5" />
+                                            {resource}
+                                        </motion.a>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
