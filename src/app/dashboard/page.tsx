@@ -170,7 +170,7 @@ export default function Dashboard() {
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
                             Hey, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
-                                {userProfile.email.split("@")[0]}
+                                {userProfile?.email?.split("@")[0] || "Student"}
                             </span>!
                         </h2>
                         <p className="text-slate-500 dark:text-slate-400 font-medium mt-2 flex items-center gap-2 text-lg">
@@ -327,7 +327,7 @@ export default function Dashboard() {
                             </h3>
                             <div className="grid grid-cols-4 gap-3">
                                 {BADGES.map((badge) => {
-                                    const isUnlocked = userProfile.gamification.badges.includes(badge.id);
+                                    const isUnlocked = userProfile?.gamification?.badges?.includes(badge.id) || false;
                                     return (
                                         <div key={badge.id} className="group relative">
                                             <div className={cn(
